@@ -5,27 +5,31 @@ from train_test import *
 if __name__ == '__main__':
     epoch = 100
     k = 1
-    l = 1
+    l = 3
     lr = 2e-4
     drop_prob = 0.2
     batch_size = 4
-    data_size = 500
-    iteration = int(data_size/batch_size)
+    data_size = 400
     img_size = (256, 256)
     input_channels = 3
     output_channels = 3
     mode = 'test'  # train, test
-    data_path = './pix2pix-dataset/cityscapes/cityscapes/train/'
+    data_path = './pix2pix-dataset/facades/facades/train/'
 
     device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
     print('device : ', device)
 
     model = Model(input_channels, output_channels, batch_size).to(device)
 
+    max_size = len(os.listdir(data_path))
+    if data_size > max_size: data_size = max_size
+    iteration = int(data_size / batch_size)
+
+
     if mode == 'train':
         opt_gen = torch.optim.AdamW(model.generator.parameters(), lr)
         opt_dis = torch.optim.AdamW(model.discriminator.parameters(), lr)
-        real_img_set, cond_img_set = get_data_set(data_path, 500, img_size)
+        real_img_set, cond_img_set = get_data_set(data_path, data_size, img_size)
 
         real_img_set = torch.tensor(real_img_set, dtype=torch.float32).to(device)
         cond_img_set = torch.tensor(cond_img_set, dtype=torch.float32).to(device)

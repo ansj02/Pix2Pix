@@ -1,3 +1,4 @@
 pix2pix-dataset/
 venv/
-model_data.pth
+sample2/
+*.pth

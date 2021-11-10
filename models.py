@@ -147,6 +147,24 @@ class Model(nn.Module):
         disc_loss = -(torch.sum(torch.log(real_img_discriminant))/self.batch_size + fake_disc_loss)
         gen_loss = fake_disc_loss + self.lamda * L1_loss
         return disc_loss, gen_loss
+        
+        
+    def loss_gen(self, img, condition_img):
+        generated_img = self.generator(condition_img)
+        fake_img_discriminant = self.discriminator(generated_img, condition_img)
+        fake_disc_loss = self.MSE_loss(torch.ones_like(fake_img_discriminant), fake_img_discriminant)
+        L1_loss = self.L1_loss(img, generated_img) * self.lamda
+        gen_loss = fake_disc_loss + L1_loss
+        return gen_loss
+
+    def loss_dis(self, img, condition_img):
+        real_img_discriminant = self.discriminator(img, condition_img)
+        generated_img = self.generator(condition_img)
+        fake_img_discriminant = self.discriminator(generated_img, condition_img)
+        fake_disc_loss = self.MSE_loss(torch.zeros_like(fake_img_discriminant), fake_img_discriminant)
+        real_disc_loss = self.MSE_loss(torch.ones_like(real_img_discriminant), real_img_discriminant)
+        disc_loss = (fake_disc_loss + real_disc_loss) / 2
+        return disc_loss
     '''
 
 

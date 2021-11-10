@@ -12,8 +12,6 @@ def get_image(img_path):
     return real_img, cond_img
 
 def get_data_set(data_path, data_set_size, image_size):
-    max_size = len(os.listdir(data_path))
-    if data_set_size > max_size: data_set_size = max_size
     real_img_set = np.zeros((data_set_size, image_size[0], image_size[1], 3))
     cond_img_set = np.zeros((data_set_size, image_size[0], image_size[1], 3))
     for id in range(data_set_size):
