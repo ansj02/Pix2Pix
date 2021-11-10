@@ -43,8 +43,10 @@ if __name__ == '__main__':
             print('model saved')
 
     elif mode == 'test':
-        sample_size = 10
+        sample_size = 20
+        model = Model(input_channels, output_channels, batch_size).to('cpu')
+
         real_img_set, cond_img_set = get_data_set(data_path, sample_size, img_size)
         if os.path.isfile('model_data.pth'): model.load_state_dict(torch.load('model_data.pth'))
-        make_sample_img(model, cond_img_set, real_img_set, sample_size, device)
+        make_sample_img(model, cond_img_set, real_img_set, sample_size)
 

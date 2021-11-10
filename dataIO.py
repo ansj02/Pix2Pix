@@ -26,17 +26,17 @@ def get_data_set(data_path, data_set_size, image_size):
     return real_img_set, cond_img_set
 
 def val_to_img(img, model, is_tensor = True):
-    if is_tensor : img = img.to('cpu').detach().numpy()
+    if is_tensor : img = img.detach().numpy()
     else : img = np.array(img)
     img = np.transpose(img, (0, 2, 3, 1))
     img = np.reshape(img, (-1, 256, 256, 3))
     img = np.array((img + 1.) / 2. * 255., dtype=np.uint8)
     return img
 
-def make_sample_img(model, test_cond_img, test_img, sample_size, device):
+def make_sample_img(model, test_cond_img, test_img, sample_size):
     sample_img = np.zeros((sample_size, 256, 768, 3), dtype=np.uint8)
 
-    test_cond_img = torch.tensor(test_cond_img, dtype=torch.float32).to(device)
+    test_cond_img = torch.tensor(test_cond_img, dtype=torch.float32)
     generated_img = model.generator(test_cond_img)
     generated_img = val_to_img(generated_img, model)
     test_cond_img = val_to_img(test_cond_img, model)
